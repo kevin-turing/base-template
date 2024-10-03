@@ -20,19 +20,27 @@ const steps = [
   "Results",
 ];
 
-const ProgressIndicator = ({ currentStep }) => (
-  <div className="mb-4">
-    <Progress value={(currentStep / (steps.length - 1)) * 100} className="w-full" />
-    <div className="flex justify-between mt-2">
-      {steps.map((step, index) => (
-        <span key={index} className={`text-xs ${index === currentStep ? "font-bold" : ""}`}>
-          {step}
-        </span>
-      ))}
+const ProgressIndicator = ({ currentStep, steps }) => (
+  <div className="mb-4 space-y-2">
+    <div className="flex justify-between items-center">
+      <span className="text-sm font-medium">Step {currentStep + 1} of {steps.length}</span>
+      <span className="text-sm font-medium">{steps[currentStep]}</span>
+    </div>
+    <Progress value={((currentStep + 1) / steps.length) * 100} className="w-full" />
+    <div className="flex justify-between">
+      <div className="flex space-x-1">
+        {steps.map((_, index) => (
+          <div
+            key={index}
+            className={`w-2 h-2 rounded-full ${
+              index <= currentStep ? "bg-primary" : "bg-gray-300"
+            }`}
+          />
+        ))}
+      </div>
     </div>
   </div>
 );
-
 const DeviceSelection = ({ formData, setFormData, phoneData }) => {
   const brands = [...new Set(phoneData.phones.map((phone) => phone.brand))];
   const models = phoneData.phones.filter((phone) => phone.brand === formData.brand);
@@ -995,7 +1003,7 @@ export default function App() {
   return (
     <div className="container mx-auto p-4 max-w-2xl">
       <h1 className="text-2xl font-bold mb-4">Mobile Phone Resale Value Estimator</h1>
-      <ProgressIndicator currentStep={currentStep} />
+      <ProgressIndicator currentStep={currentStep} steps={steps} />
       <Card>
         <CardHeader>
           <CardTitle>{steps[currentStep]}</CardTitle>
