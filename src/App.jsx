@@ -248,8 +248,8 @@ export default function ShippingCalculator() {
   
     const finalPrice = basePrice * priceMultiplier * dimensionMultiplier * shippingMethodMultiplier * fragileMultiplier;
   
-    // Currency conversion
-    const convertedPrice = currency === 'USD' ? finalPrice : finalPrice * currencyRates[currency];
+    // Currency conversion (USD remains unchanged)
+    const convertedPrice = currency === 'USD' ? finalPrice : finalPrice * (currencyRates[currency] || 1);
   
     setResults({
       transitTime: Math.ceil(estimatedDeliveryTime),
@@ -355,15 +355,16 @@ export default function ShippingCalculator() {
             <div>
               <Label htmlFor="currency">Currency</Label>
               <Select value={currency} onValueChange={setCurrency}>
-                <SelectTrigger id="currency">
-                  <SelectValue placeholder="Select currency" />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.keys(currencyRates).map((curr) => (
-                    <SelectItem key={curr} value={curr}>{curr}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          <SelectTrigger id="currency">
+            <SelectValue placeholder="Select currency" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="USD">USD</SelectItem>
+            {Object.keys(currencyRates).map((curr) => (
+              <SelectItem key={curr} value={curr}>{curr}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
             </div>
           </div>
           <Button 
